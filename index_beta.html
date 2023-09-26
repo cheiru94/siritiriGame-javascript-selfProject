@@ -1,0 +1,125 @@
+<!-- word-relay.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>しりとりゲーム</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/mian.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css" />
+
+</head>
+<!--------------------------------- body --------------------------------->
+
+<body>
+<div class="container">
+  <!-- order -->
+  <div>
+    <span id="order"> 1 </span>番目の参加者
+  </div>
+
+  <!-- word -->
+  <div>
+    提示語: <span id="word"></span> 
+  </div>
+
+  <!-- input -->
+  <input type="text" placeholder="ひらがなのみ入力して下さい！">
+  <button>入力</button>
+</div>
+
+  <!------------------------------ Javascript ------------------------------>
+  <script>
+
+  // ※ querySelector ※
+    const number = Number(prompt('何名様でいらっしゃいますか？'));
+    const $button = document.querySelector('button');
+    const $input = document.querySelector('input');
+    const $word = document.querySelector('#word');
+    const $order = document.querySelector('#order');
+
+  // ※ 変数設定 ※
+    let word; // 🟢 提示語　->人々が単語を入力するたびに変わるので "let"で設定
+    let newWord; // 🟡 現在単語
+
+
+  // ※ ハンドラ ※
+    // 1. ハンドラ__onClickButton
+    const onClickButton = () => {
+      // 1. 提示語が空いているのかい❓
+
+      // 1.1. 空いている
+      if (!word) {
+      //🟢 <- 🟡
+        word = newWord; // 🟡 入力した単語が提示語（'word'）になる
+        $word.textContent = word; //画面に提示語を表す
+
+        const order = Number($order.textContent); // 順番チェック
+
+        // 1.1.1. ４人目以上なら、初期化させる
+        if (order+1 > number) {
+          $order.textContent = 1; //　最初の人に回す
+
+          // 1.1.2. 3人目以下なら、続ける
+        } else {
+          $order.textContent = order + 1; // 次ん人に回す
+        }
+
+        //　inputの初期化
+        $input.value= '';
+        $input.focus();
+
+      // 1.2. 空いてない 
+      } else {
+
+        // 1.2.1. 語尾が同じなのか？
+        if (word[word.length - 1] === newWord[0]) {
+          word = newWord; // 今の単語を提示語に入れる
+          $word.textContent = word; //画面に提示語を表す
+
+          const order = Number($order.textContent); // 順番チェック
+
+          // 1.2.1.1 ４人目以上なら、初期化させる
+          if (order + 1 > number) {
+            $order.textContent = 1;
+
+          // 1.2.1.2. 3人目以下なら、続ける
+          } else {
+            $order.textContent = order + 1;
+          }
+
+          //　inputの初期化
+          $input.value = '';
+          $input.focus();
+          
+        // 1.2.2. 語尾が違うのか？
+        } else {
+          alert('単語が正しくありません！');
+
+          //　inputの初期化
+          $input.value = '';
+          $input.focus();
+        }
+      }
+    };
+
+    // 2. ハンドラ__onInput
+    const onInput = (event) => {
+      newWord = event.target.value; // 🟡入力する単語を現在単語に入れよう
+    };
+
+    $button.addEventListener('click', onClickButton);
+    $input.addEventListener('input', onInput);
+
+
+  </script>
+</body>
+
+</html>
